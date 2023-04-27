@@ -7,10 +7,6 @@ executors:
     docker:
       - image: circleci/node:14.18.0-browsers
     working_directory: /tmp/cvLiveS3
-  windows-executor:
-    docker:
-      - image: cimg/ruby:2.7.1-node
-    working_directory: /tmp/cvLiveS3
 
 commands:
   checkout-cache-install:
@@ -33,6 +29,12 @@ commands:
     description: "publish to aws s3"
     steps:
       - checkout
+      - run:
+          name: Install AWS CLI
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y python-pip
+            sudo pip install awscli
       - aws-s3/sync:
           arguments: |
             --cache-control "max-age=86400"
@@ -45,6 +47,10 @@ commands:
           arguments: '--dryrun'
           from: /tmp/cvLiveS3/dist
           to: 's3://cv.jonaskabalo.com'
+      - run:
+          name: Invalidate CloudFront cache
+          command: |
+            aws cloudfront create-invalidation --distribution-id DISTRIBUTION_ID --paths "/*"
 
 jobs:
   test:

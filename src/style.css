@@ -75,6 +75,7 @@ p { margin: 10px auto !important; }
 .title-experience h3, .title-skills h3 {
   font-size: 20px;
   margin: 0;
+  font-weight: bold;
 }
 .fas { font-size: 24px; }
 .experience, .skills {
@@ -110,7 +111,8 @@ p { margin: 10px auto !important; }
 .studies-skills span:after, .hobbies span:after { content: ' :' }
 .hobbies, .studies-skills {
   padding: 20px 20px;
-  margin-left: 250px;
+  width: 70%;
+  margin: 0 auto;
 }
 .hobbies ul { line-height: 1.9; }
 /* FOOTER */
