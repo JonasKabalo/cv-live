@@ -78,9 +78,9 @@ const languages = reactive(['French (C2)', 'English (B1)'])
             <p style="margin-top: 10px;">
               <small>List of all the languages: </small>
               <span
-                class="list-of-skills cursor-pointer"
                 v-for="(skill, indexSkill) in skills"
                 :key="indexSkill"
+                class="list-of-skills cursor-pointer"
               >
                 {{ (indexSkill + 1) !== skills.length ? `${skill} | ` : `${skill}` }}
               </span>
@@ -89,9 +89,9 @@ const languages = reactive(['French (C2)', 'English (B1)'])
           <div class="skills-block">
             <h4>LEARNING NOW</h4>
             <span
-              class="list-of-skills cursor-pointer"
               v-for="(skillNow, indexSkillNow) in skillsNow"
               :key="indexSkillNow"
+              class="list-of-skills cursor-pointer"
             >
               {{ (indexSkillNow + 1) !== skillsNow.length ? `${skillNow} | ` : `${skillNow}` }}
             </span>
@@ -99,9 +99,9 @@ const languages = reactive(['French (C2)', 'English (B1)'])
           <div class="skills-block">
             <h4>LANGUAGES</h4>
               <span
-                class="list-of-skills cursor-pointer"
                 v-for="(language, indexLanguage) in languages"
                 :key="indexLanguage"
+                class="list-of-skills cursor-pointer"
               >
                 {{ (indexLanguage + 1) !== languages.length ? `${language} | ` : `${language}` }}
             </span>

@@ -1,0 +1,72 @@
+version: 2.1
+orbs:
+  node: circleci/node@1.1
+  aws-s3: circleci/aws-s3@2.0.0
+executors:
+  test-executor:
+    docker:
+      - image: circleci/node:14.18.0-browsers
+    working_directory: /tmp/cvLiveS3
+  windows-executor:
+    docker:
+      - image: cimg/ruby:2.7.1-node
+    working_directory: /tmp/cvLiveS3
+
+commands:
+  checkout-cache-install:
+    description: "create the folder dist"
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
+      - run: yarn lint
+      - run: yarn build
+  publish:
+    description: "publish to aws s3"
+    steps:
+      - checkout
+      - aws-s3/sync:
+          arguments: |
+            --acl public-read \
+            --cache-control "max-age=86400"
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-region: AWS_REGION
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          from: /tmp/cvLiveS3/dist
+          to: 's3://cv.jonaskabalo.com'
+      - aws-s3/copy:
+          arguments: '--dryrun'
+          from: /tmp/cvLiveS3/dist
+          to: 's3://cv.jonaskabalo.com'
+
+jobs:
+  test:
+    executor: test-executor
+    steps:
+      - checkout-cache-install
+  publish-windows:
+    executor: test-executor
+    steps:
+      - checkout-cache-install
+      - publish
+
+workflows:
+  version: 2
+  test-and-publish:
+    jobs:
+      - test
+      - publish-windows:
+          filters:
+              branches:
+                only:
+                  - main
+          requires:
+            - test
