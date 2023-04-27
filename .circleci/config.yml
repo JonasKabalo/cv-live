@@ -29,28 +29,14 @@ commands:
     description: "publish to aws s3"
     steps:
       - checkout
-      - run:
-          name: Install AWS CLI
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y python-pip
-            sudo pip install awscli
-      - aws-s3/sync:
-          arguments: |
-            --cache-control "max-age=86400"
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-region: AWS_REGION
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          from: /tmp/cvLiveS3/dist
-          to: 's3://cv.jonaskabalo.com'
-      - aws-s3/copy:
-          arguments: '--dryrun'
-          from: /tmp/cvLiveS3/dist
-          to: 's3://cv.jonaskabalo.com'
-      - run:
-          name: Invalidate CloudFront cache
-          command: |
-            aws cloudfront create-invalidation --distribution-id DISTRIBUTION_ID --paths "/*"
+      - aws-s3/deploy-to-s3-and-cloudfront:
+          bucket: cv.jonaskabalo.com
+          paths:
+            - source: /tmp/cvLiveS3/dist
+              destination: /
+          cloudfront-distribution-id: DISTRIBUTION_ID
+          invalidate-paths:
+            - /*
 
 jobs:
   test:
