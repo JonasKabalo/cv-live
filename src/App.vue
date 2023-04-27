@@ -1,7 +1,7 @@
 <script setup>
 import { defineComponent } from 'vue';
 
-import HeaderCv from './components/HeaderCV.vue'
+import HeaderCv from './components/HeaderCv.vue'
 import MainCv from './components/MainCv.vue'
 import FooterCv from './components/FooterCv.vue'
 
