@@ -1,11 +1,11 @@
 version: 2.1
 orbs:
   node: circleci/node@1.1
-  aws-s3: circleci/aws-s3@2.0.0
+  aws-s3: circleci/aws-s3@3.0.0
 executors:
   test-executor:
     docker:
-      - image: circleci/node:14.18.0-browsers
+      - image: circleci/node:16.15.1-browsers
     working_directory: /tmp/cvLiveS3
   windows-executor:
     docker:
