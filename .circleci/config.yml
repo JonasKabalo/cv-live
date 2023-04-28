@@ -1,7 +1,10 @@
 version: 2.1
+
 orbs:
-  node: circleci/node@1.1
-  aws-s3: circleci/aws-s3@3.0.0
+  node: circleci/node@4.4.4
+  aws-cli: circleci/aws-cli@2.1.4
+  aws-s3: circleci/aws-s3@4.0.0
+
 executors:
   test-executor:
     docker:
@@ -15,7 +18,7 @@ commands:
       - checkout
       - restore_cache:
           keys:
-          - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
+            - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
       - run:
           name: Install dependencies
           command: yarn install
@@ -25,39 +28,61 @@ commands:
           key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
       - run: yarn lint
       - run: yarn build
-  publish:
-    description: "publish to aws s3"
+
+  sync-to-s3:
+    description: "Sync the dist folder to S3 bucket"
     steps:
-      - checkout
-      - aws-s3/deploy-to-s3-and-cloudfront:
-          bucket: cv.jonaskabalo.com
-          paths:
-            - source: /tmp/cvLiveS3/dist
-              destination: /
-          cloudfront-distribution-id: E2HPPWH0E3HAL9
-          invalidate-paths:
-            - /*
+      - aws-s3/sync:
+          arguments: |
+            --cache-control "max-age=86400"
+          aws-access-key-id: $AWS_ACCESS_KEY_ID
+          aws-region: $AWS_REGION
+          aws-secret-access-key: $AWS_SECRET_ACCESS_KEY
+          from: /tmp/cvLiveS3/dist
+          to: 's3://cv.jonaskabalo.com'
+          overwrite: true
+      - aws-s3/copy:
+          arguments: '--dryrun'
+          from: /tmp/cvLiveS3/dist
+          to: 's3://cv.jonaskabalo.com'
+
+  invalidate-cloudfront:
+    description: "Invalidate CloudFront distribution"
+    steps:
+      - run:
+          name: Create CloudFront invalidation
+          command: |
+            aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
 
 jobs:
   test:
-    executor: test-executor
+    executor: node/default
     steps:
       - checkout-cache-install
-  publish-windows:
-    executor: test-executor
+
+  publish:
+    executor: node/default
     steps:
       - checkout-cache-install
-      - publish
+      - sync-to-s3:
+          requires:
+            - checkout-cache-install
+      - aws-cli/install
+      - invalidate-cloudfront:
+          requires:
+            - aws-cli/install
+          environment:
+            CLOUDFRONT_DISTRIBUTION_ID: $CLOUDFRONT_DISTRIBUTION_ID
 
 workflows:
   version: 2
   test-and-publish:
     jobs:
       - test
-      - publish-windows:
+      - publish:
           filters:
-              branches:
-                only:
-                  - main
+            branches:
+              only:
+                - main
           requires:
             - test
