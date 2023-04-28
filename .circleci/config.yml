@@ -34,9 +34,9 @@ commands:
       - aws-s3/sync:
           arguments: |
             --cache-control "max-age=86400"
-          aws-access-key-id: $AWS_ACCESS_KEY_ID
-          aws-region: $AWS_REGION
-          aws-secret-access-key: $AWS_SECRET_ACCESS_KEY
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-region: AWS_REGION
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           from: /tmp/cvLiveS3/dist
           to: 's3://cv.jonaskabalo.com'
           overwrite: true
@@ -50,7 +50,7 @@ commands:
       - run:
           name: Create CloudFront invalidation
           command: |
-            aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+            aws cloudfront create-invalidation --distribution-id DISTRIBUTION_ID --paths "/*"
 
 jobs:
   test:
