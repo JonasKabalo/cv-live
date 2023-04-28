@@ -28,7 +28,6 @@ commands:
           key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
       - run: yarn lint
       - run: yarn build
-
   sync-to-s3:
     description: "Sync the dist folder to S3 bucket"
     steps:
@@ -45,7 +44,6 @@ commands:
           arguments: '--dryrun'
           from: /tmp/cvLiveS3/dist
           to: 's3://cv.jonaskabalo.com'
-
   invalidate-cloudfront:
     description: "Invalidate CloudFront distribution"
     steps:
@@ -56,23 +54,15 @@ commands:
 
 jobs:
   test:
-    executor: node/default
+    executor: test-executor
     steps:
       - checkout-cache-install
-
   publish:
-    executor: node/default
+    executor: test-executor
     steps:
       - checkout-cache-install
-      - sync-to-s3:
-          requires:
-            - checkout-cache-install
-      - aws-cli/install
-      - invalidate-cloudfront:
-          requires:
-            - aws-cli/install
-          environment:
-            CLOUDFRONT_DISTRIBUTION_ID: $CLOUDFRONT_DISTRIBUTION_ID
+      - sync-to-s3
+      - invalidate-cloudfront
 
 workflows:
   version: 2
