@@ -39,7 +39,6 @@ commands:
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           from: /tmp/cvLiveS3/dist
           to: 's3://cv.jonaskabalo.com'
-          overwrite: true
       - aws-s3/copy:
           arguments: '--dryrun'
           from: /tmp/cvLiveS3/dist
