@@ -30,13 +30,13 @@ commands:
     steps:
       - checkout
       - aws-s3/deploy-to-s3-and-cloudfront:
-        bucket: cv.jonaskabalo.com
-        paths:
-          - source: /tmp/cvLiveS3/dist
-            destination: /
-        cloudfront-distribution-id: DISTRIBUTION_ID
-        invalidate-paths:
-          - /*
+          bucket: cv.jonaskabalo.com
+          paths:
+            - source: /tmp/cvLiveS3/dist
+              destination: /
+          cloudfront-distribution-id: DISTRIBUTION_ID
+          invalidate-paths:
+            - /*
 
 jobs:
   test:
