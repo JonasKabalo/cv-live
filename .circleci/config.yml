@@ -34,7 +34,7 @@ commands:
           paths:
             - source: /tmp/cvLiveS3/dist
               destination: /
-          cloudfront-distribution-id: DISTRIBUTION_ID
+          cloudfront-distribution-id: E2HPPWH0E3HAL9
           invalidate-paths:
             - /*
 
