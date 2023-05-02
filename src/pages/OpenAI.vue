@@ -1,7 +1,10 @@
 <template>
-  <div>
-    <h1>Generate Text</h1>
-    <button @click="generateText">Generate</button>
+  <div class="text-center m-3">
+    <h1 class="m-3">Hello, here ! You found the page where I try the Chat-GPT API</h1>
+    <div class="m-1 flex">
+      <button disabled @click="generateText">Generate </button>
+      <router-link to="/"> Back</router-link>
+    </div>
     <p>{{ text }}</p>
   </div>
 </template>
