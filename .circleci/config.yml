@@ -68,11 +68,6 @@ workflows:
   test-and-publish:
     jobs:
       - test
-        filters:
-            branches:
-              only:
-                - staging
-                - main
       - publish:
           filters:
             branches:
