@@ -1,3 +1,7 @@
+const dotenv = require('dotenv');
+// Load environment variables from .env file
+dotenv.config();
+
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import legacy from '@vitejs/plugin-legacy'
