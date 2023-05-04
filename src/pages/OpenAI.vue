@@ -2,7 +2,7 @@
   <div class="text-center m-3">
     <h1 class="m-3">Hello, here ! You found the page where I try the Chat-GPT API</h1>
     <div class="m-1 flex">
-      <button @click="generateText">Generate </button>
+      <button @click="generateText">Generate </button> -
       <router-link to="/"> Back</router-link>
     </div>
     <p>{{ text }}</p>
