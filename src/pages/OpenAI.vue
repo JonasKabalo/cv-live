@@ -2,7 +2,7 @@
   <div class="text-center m-3">
     <h1 class="m-3">Hello, here ! You found the page where I try the Chat-GPT API</h1>
     <div class="m-1 flex">
-      <button disabled @click="generateText">Generate </button>
+      <button @click="generateText">Generate </button> -
       <router-link to="/"> Back</router-link>
     </div>
     <p>{{ text }}</p>
@@ -19,15 +19,23 @@ export default {
   },
   methods: {
     async generateText() {
-      const completions = await this.$openai.createCompletion({
-        model: 'davinci',
-        engine: 'davinci',
+      /* const completions = await this.$openai.createCompletion({
+        model: 'gpt-3.5-turbo',
         temperature: 0.5,
         max_tokens: 5,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
         prompt: 'Hello world',
+      }).then(console.log).catch(console.error); */
+      const completions = await this.$openai.createChatCompletion({
+        model: 'gpt-3.5-turbo',
+        temperature: 0.5,
+        max_tokens: 5,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+        messages: [{role: "user", content: "Hello world"}],
       }).then(console.log).catch(console.error);
       if (completions) {
         console.log(completions);

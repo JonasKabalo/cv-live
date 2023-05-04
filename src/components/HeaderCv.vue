@@ -9,7 +9,7 @@
           <h1>Full Stack Engineer</h1>
           <h4>Jonas Kabalo</h4>
           <small>
-            <router-link to="/OpenAI">Motivated</router-link>, Curious, Passionate</small>
+            Motivated, <router-link to="/OpenAI">Curious</router-link>, Passionate</small>
           <p style="font-size: 11px;">this.look.like = like.look.this</p>
           <a style="font-size: 11px;" download="cv-jonas" href="/cvjonas.pdf" target="_blank">Download CV</a>
         </div>
